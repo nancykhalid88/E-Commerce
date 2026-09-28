@@ -1,5 +1,6 @@
 ﻿using E_Commerce.Domain.Contracts;
 using E_Commerce.Infrastructure.Data;
+using E_Commerce.Infrastructure.Repositories;
 using E_Commerce.Infrastructure.Seeding;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -21,6 +22,7 @@ namespace E_Commerce.Infrastructure
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });
             services.AddKeyedScoped<IDataSeeder, CatelogDataSeeder>("Catelog");
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;
         }

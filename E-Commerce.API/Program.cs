@@ -1,5 +1,6 @@
 using E_Commerce.API.Extensions;
 using E_Commerce.Infrastructure;
+using E_Commerce.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddInfrastructeServices(builder.Configuration);
+builder.Services.AddApplicationServices();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
