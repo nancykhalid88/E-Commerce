@@ -4,6 +4,7 @@ using E_Commerce.Application.Contracts;
 using E_Commerce.Application.DTOS;
 using E_Commerce.Domain.Contracts;
 using E_Commerce.Domain.Entities.Product;
+using E_Commerce.Domain.Entities.Products;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,16 +16,17 @@ namespace E_Commerce.Application.Services
     public class ProductService: IProductService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly Mapper _mapper;
+        private readonly IMapper _mapper;
 
-        public ProductService(IUnitOfWork unitOfWork, Mapper mapper)
+        public ProductService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
         public async Task<Result<IReadOnlyList<BrandDto>>> GetAllBrandsAsync(CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            var Brands = await _unitOfWork.GetRepository<ProductBrand, int>().GetAllAsync(ct);
+            return Result<IReadOnlyList<BrandDto>>.Ok(_mapper.Map<IReadOnlyList<BrandDto>>(Brands));
         }
 
         public async Task<Result<IReadOnlyList<ProductDto>>> GetAllProductsAsync(CancellationToken ct = default)
@@ -35,9 +37,11 @@ namespace E_Commerce.Application.Services
             return Result<IReadOnlyList<ProductDto>>.Ok(Data);
         }
 
-        public Task<Result<IReadOnlyList<TypeDto>>> GetAllTypesAsync(CancellationToken ct = default)
+        public async Task<Result<IReadOnlyList<TypeDto>>> GetAllTypesAsync(CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            var Types = await _unitOfWork.GetRepository<ProductType,int>().GetAllAsync(ct);
+            return Result<IReadOnlyList<TypeDto>>.Ok(_mapper.Map<IReadOnlyList<TypeDto>>(Types));
+
         }
 
         public async Task<Result<ProductDto>> GetProductAsync(int id, CancellationToken ct = default)
