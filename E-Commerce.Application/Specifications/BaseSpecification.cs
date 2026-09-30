@@ -11,7 +11,7 @@ namespace E_Commerce.Application.Specifications
 {
     public class BaseSpecification<TEntity, TKey> : ISpecifications<TEntity, TKey> where TEntity : BaseEntity<TKey>
     {
-        public ICollection<Expression<Func<TEntity, object>>> IncludeExpressions { get; }
+        public ICollection<Expression<Func<TEntity, object>>> IncludeExpressions { get; } = [];
         protected void AddInclude(Expression<Func<TEntity, object>> include)
         {
             IncludeExpressions.Add(include);
