@@ -30,13 +30,17 @@ namespace E_Commerce.Application.Services
             return Result<IReadOnlyList<BrandDto>>.Ok(_mapper.Map<IReadOnlyList<BrandDto>>(Brands));
         }
 
-        public async Task<Result<IReadOnlyList<ProductDto>>> GetAllProductsAsync(CancellationToken ct = default)
+
+        public async Task<Result<PaginatedResult<ProductDto>>> GetAllProductsAsync(ProductQueryParams queryParams, CancellationToken ct = default)
         {
-            var Spec = new ProductWithBrandAndTypeSpecifications();
+            var Spec = new ProductWithBrandAndTypeSpecifications(queryParams);
             var Repo = _unitOfWork.GetRepository<Product, int>();
-            var Products = await Repo.GetAllAsync(Spec,ct);
-            var Data = _mapper.Map<IReadOnlyList<ProductDto>>(Products);
-            return Result<IReadOnlyList<ProductDto>>.Ok(Data);
+            var products = await Repo.GetAllAsync(Spec);
+            var data = _mapper.Map<IReadOnlyList<ProductDto>>(products);
+            var countSpec = new ProductCountSpecifications(queryParams);
+            var countOfAllProducts = await _unitOfWork.GetRepository<Product, int>().CountAsync(countSpec);
+            var result = new PaginatedResult<ProductDto>(queryParams.PageIndex, queryParams.PageSize, countOfAllProducts, data);
+            return Result<PaginatedResult<ProductDto>>.Ok(result);
         }
 
         public async Task<Result<IReadOnlyList<TypeDto>>> GetAllTypesAsync(CancellationToken ct = default)
@@ -48,7 +52,8 @@ namespace E_Commerce.Application.Services
 
         public async Task<Result<ProductDto>> GetProductAsync(int id, CancellationToken ct = default)
         {
-            var product = await _unitOfWork.GetRepository<Product, int>().GetByIdAsync(id,ct);
+            var Spec = new ProductWithBrandAndTypeSpecifications(id);
+            var product = await _unitOfWork.GetRepository<Product, int>().GetByIdAsync(Spec,ct);
             if(product is null)
             {
                 return Result<ProductDto>.Fail(Error.NotFound("Product.NotFound", $"Product with Id {id} was not found"));
