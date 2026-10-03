@@ -1,7 +1,9 @@
 ﻿using E_Commerce.Domain.Contracts;
 using E_Commerce.Infrastructure.Data;
+using E_Commerce.Infrastructure.Identity.Data;
 using E_Commerce.Infrastructure.Repositories;
 using E_Commerce.Infrastructure.Seeding;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,6 +34,11 @@ namespace E_Commerce.Infrastructure
             });
             services.AddScoped<IBasketRepository, BasketRepository>();
             services.AddSingleton<ICacheRepository, CacheRepository>();
+            #endregion
+            #region IdentityDb
+            services.AddDbContext<StoreIdentityDbContext>(options => {
+                options.UseSqlServer(configuration.GetConnectionString("IdentityConnection"));
+            });
             #endregion
 
             return services;
