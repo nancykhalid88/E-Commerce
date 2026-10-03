@@ -1,4 +1,5 @@
-﻿using E_Commerce.Application.Common;
+﻿using E_Commerce.API.Attributes;
+using E_Commerce.Application.Common;
 using E_Commerce.Application.Contracts;
 using E_Commerce.Application.DTOS;
 using Microsoft.AspNetCore.Http;
@@ -9,6 +10,7 @@ namespace E_Commerce.API.Controllers
     public class ProductsController(IProductService productService) : ApiBaseController
     {
         #region GetAllProducts
+        [RedisCache(100)]
         [HttpGet]
         [ProducesResponseType(typeof(ProductDto),StatusCodes.Status200OK)]
         public async Task<ActionResult<PaginatedResult<ProductDto>>> GetAllProducts([FromQuery]ProductQueryParams queryParams ,CancellationToken ct)
