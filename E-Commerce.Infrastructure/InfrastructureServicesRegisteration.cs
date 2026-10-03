@@ -1,8 +1,10 @@
 ﻿using E_Commerce.Domain.Contracts;
 using E_Commerce.Infrastructure.Data;
 using E_Commerce.Infrastructure.Identity.Data;
+using E_Commerce.Infrastructure.Identity.Entities;
 using E_Commerce.Infrastructure.Repositories;
 using E_Commerce.Infrastructure.Seeding;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -25,6 +27,7 @@ namespace E_Commerce.Infrastructure
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });
             services.AddKeyedScoped<IDataSeeder, CatelogDataSeeder>("Catelog");
+            services.AddKeyedScoped<IDataSeeder, IdentityDataSeeder>("Identity");
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             #region Redis
@@ -39,6 +42,9 @@ namespace E_Commerce.Infrastructure
             services.AddDbContext<StoreIdentityDbContext>(options => {
                 options.UseSqlServer(configuration.GetConnectionString("IdentityConnection"));
             });
+            services.AddIdentityCore<ApplicationUser>()
+            .AddRoles<IdentityRole>()
+            .AddEntityFrameworkStores<StoreIdentityDbContext>();
             #endregion
 
             return services;
