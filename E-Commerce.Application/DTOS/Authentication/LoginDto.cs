@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace E_Commerce.Application.DTOS.Authentication
 {
-    internal class LoginDto
+    public class LoginDto
     {
         [Required, EmailAddress]
         public string Email { get; set; } = default!;

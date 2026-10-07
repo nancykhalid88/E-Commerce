@@ -1,7 +1,9 @@
-﻿using E_Commerce.Domain.Contracts;
+﻿using E_Commerce.Application.Contracts;
+using E_Commerce.Domain.Contracts;
 using E_Commerce.Infrastructure.Data;
 using E_Commerce.Infrastructure.Identity.Data;
 using E_Commerce.Infrastructure.Identity.Entities;
+using E_Commerce.Infrastructure.Identity.Services;
 using E_Commerce.Infrastructure.Repositories;
 using E_Commerce.Infrastructure.Seeding;
 using Microsoft.AspNetCore.Identity;
@@ -45,6 +47,7 @@ namespace E_Commerce.Infrastructure
             services.AddIdentityCore<ApplicationUser>()
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<StoreIdentityDbContext>();
+            services.AddScoped<IIdentityService, IdentityService>();
             #endregion
 
             return services;
