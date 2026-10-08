@@ -52,9 +52,15 @@ namespace E_Commerce.Infrastructure
             .AddEntityFrameworkStores<StoreIdentityDbContext>();
             services.AddScoped<IIdentityService, IdentityService>();
             services.AddScoped<ITokenService, TokenService>();
+
+
             #region Token
+            // 1. Bind and register JWTSettings into the DI container so IOptions<JWTSettings> works!
+            services.Configure<JWTSettings>(configuration.GetSection("JWT"));
+
+            // 2. Fetch it manually just for the AddJwtBearer setup below
             var jwtSettings = configuration.GetSection("JWT").Get<JWTSettings>()
-                ?? throw new InvalidOperationException("HWT Settings Is Not Configured");
+                ?? throw new InvalidOperationException("JWT Settings Is Not Configured");
 
             services.AddAuthentication(opt =>
             {
@@ -83,7 +89,7 @@ namespace E_Commerce.Infrastructure
             #endregion
             #endregion
 
-            
+
         }
     }
 }
