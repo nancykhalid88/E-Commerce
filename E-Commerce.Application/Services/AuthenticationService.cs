@@ -12,10 +12,12 @@ namespace E_Commerce.Application.Services
     public class AuthenticationService : IAuthenticationService
     {
         private readonly IIdentityService _identityService;
+        private readonly ITokenService _tokenService;
 
-        public AuthenticationService(IIdentityService identityService)
+        public AuthenticationService(IIdentityService identityService,ITokenService tokenService)
         {
            _identityService = identityService;
+           _tokenService = tokenService;
         }
         public async Task<Result<UserDto>> LoginAsync(LoginDto loginDto, CancellationToken ct = default)
         {
