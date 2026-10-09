@@ -1,10 +1,12 @@
-﻿using E_Commerce.Application.Contracts;
+﻿using E_Commerce.Application.Common;
+using E_Commerce.Application.Contracts;
 using E_Commerce.Application.Services;
 using E_Commerce.Domain.Contracts;
 using E_Commerce.Infrastructure.Data;
 using E_Commerce.Infrastructure.Identity.Data;
 using E_Commerce.Infrastructure.Identity.Entities;
 using E_Commerce.Infrastructure.Identity.Services;
+using E_Commerce.Infrastructure.Payments;
 using E_Commerce.Infrastructure.Repositories;
 using E_Commerce.Infrastructure.Seeding;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -85,6 +87,7 @@ namespace E_Commerce.Infrastructure
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey))
                 };
             });
+            services.AddSingleton<IPaymentGateway, StripePaymentGateway>();
             return services;
             #endregion
             #endregion

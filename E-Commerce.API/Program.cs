@@ -1,5 +1,6 @@
 using E_Commerce.API.Extensions;
 using E_Commerce.Application;
+using E_Commerce.Application.Common;
 using E_Commerce.Infrastructure;
 using Microsoft.Extensions.FileProviders;
 
@@ -14,6 +15,7 @@ builder.Services.AddApplicationServices();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.Configure<PaymentGatewaySettings>(builder.Configuration.GetSection("Stripe"));
 
 var app = builder.Build();
 await app.SeedDataBaseAsync();
