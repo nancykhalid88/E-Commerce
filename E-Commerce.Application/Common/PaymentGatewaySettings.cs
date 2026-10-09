@@ -9,6 +9,7 @@ namespace E_Commerce.Application.Common
     public class PaymentGatewaySettings
     {
         public string SecretKey { get; set; } = default!;
-        public string DefaultCurrency { get; set; } = default!;
+        public string DefaultCurrency { get; set; } = "USD";
+        public string WebhookSettings { get; set; } = default!;
     }
 }

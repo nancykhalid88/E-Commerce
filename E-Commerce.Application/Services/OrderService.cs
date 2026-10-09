@@ -26,6 +26,9 @@ namespace E_Commerce.Application.Services
                 return Result<OrderToReturnDto>.Fail(Error.Validation("Basket Is Empty", $"Cannot Create Order with Basket With Id {orderDto.BasketId}."));
             var orderRepo = unitOfWork.GetRepository<Order, Guid>();
             var productRepo = unitOfWork.GetRepository<Product, int>();
+            var existingOrder = await orderRepo.GetByIdAsync(new PaymentIntentSpec(basket.PaymentIntentId),ct);
+            if (existingOrder is not null)
+                orderRepo.Remove(existingOrder);
 
             var productIds = basket.Items.Select(p => p.Id).ToHashSet();
             var products = await productRepo.GetAllAsync(

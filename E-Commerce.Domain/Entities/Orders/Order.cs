@@ -29,7 +29,7 @@ namespace E_Commerce.Domain.Entities.Orders
         public OrderAddress ShipToAddress { get; private set; } = default!;
         public DeliveryMethod DeliveryMethod { get; private set; } = default!;
         public int DeliveryMethodId { get; private set; }
-        public OrderStatus Status { get; private set; } = OrderStatus.Pending;
+        public OrderStatus Status { get; set; } = OrderStatus.Pending;
         public decimal SubTotal { get; private set; }
         public string PaymentIntentId { get; private set; } = string.Empty;
 
