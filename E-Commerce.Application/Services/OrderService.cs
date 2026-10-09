@@ -28,12 +28,22 @@ namespace E_Commerce.Application.Services
             var productRepo = unitOfWork.GetRepository<Product, int>();
 
             var productIds = basket.Items.Select(p => p.Id).ToHashSet();
-            var products = await productRepo.GetAllAsync(new(ProductWithIdSpecifications(productIds)));
+            var products = await productRepo.GetAllAsync(
+    new ProductWithIdSpecifications(productIds));
+
+            var productsById = products.ToDictionary(p => p.Id);
+
             var orderItems = new List<OrderItem>(basket.Items.Count);
+
             foreach (var item in basket.Items)
             {
-                if (!products.TryGetValue(item.Id, out var product))
-                    return Result<OrderToReturnDto>.Fail(Error.NotFound("product not found", $"product with Id: {item.Id} was not found"));
+                if (!productsById.TryGetValue(item.Id, out var product))
+                {
+                    return Result<OrderToReturnDto>.Fail(
+                        Error.NotFound(
+                            "Product Not Found",
+                            $"Product with Id: {item.Id} was not found"));
+                }
 
                 orderItems.Add(new OrderItem
                 {

@@ -13,6 +13,6 @@ namespace E_Commerce.Application.Contracts
         Task<Result<OrderToReturnDto>> CreateOrderAsync(OrderDto orderDto, string email, CancellationToken ct);
         Task<Result<IReadOnlyList<DeliveryMethodDto>>> GetAllDeliveryMehodsAsync(CancellationToken ct = default);
         Task<Result<IReadOnlyList<OrderToReturnDto>>> GetAllOrdersAsync(string email, CancellationToken ct);
-        Task<Result<OrderToReturnDto>> GetOrderByIdAndEmailAsync(int Id, string email, CancellationToken ct);
+        Task<Result<OrderToReturnDto>> GetOrderByIdAndEmailAsync(Guid Id, string email, CancellationToken ct);
     }
 }

@@ -13,7 +13,6 @@ namespace E_Commerce.Application.Specifications
         {
             AddInclude(o => o.DeliveryMethod);
             AddInclude(o => o.Items);
-            AddInclude(o => o.OrderDate);
         }
 
         public OrderSpecifications(Guid id, string email): base(o=>o.Id==id && o.BuyerEmail == email)
@@ -22,4 +21,5 @@ namespace E_Commerce.Application.Specifications
             AddInclude(o => o.Items);
         }
     }
+
 }
