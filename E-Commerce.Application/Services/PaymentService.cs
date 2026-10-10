@@ -47,16 +47,30 @@ namespace E_Commerce.Application.Services
                     return Result<BasketDto>.Fail(Error.NotFound("Product Not Found", $"Product With Id{item.Id} Is Not Found"));
                 item.Price = product.Price;
             }
+if (!basket.DeliveryMethodId.HasValue)
+                return Result<BasketDto>.Fail(
+                    Error.Validation(
+                        "Delivery Method Required",
+                        "Please select a delivery method before proceeding with payment."
+                    ));
+
             var deliveryRepo = _unitOfWork.GetRepository<DeliveryMethod, int>();
-            var deliveryMethod = await deliveryRepo.GetByIdAsync(basket.DeliveryMethodId.Value, ct);
+            var deliveryMethodId = basket.DeliveryMethodId.Value;
+
+            var deliveryMethod = await deliveryRepo.GetByIdAsync(deliveryMethodId, ct);
+
             if (deliveryMethod == null)
-                return Result<BasketDto>.Fail(Error.NotFound("Delivery Method Not Found", $"DeliveryMethod With Id: {basket.DeliveryMethodId.Value} Is Not Found"));
+                return Result<BasketDto>.Fail(
+                    Error.NotFound(
+                        "Delivery Method Not Found",
+                        $"DeliveryMethod With Id: {deliveryMethodId} Is Not Found"));
+
 
             basket.ShippingPrice = deliveryMethod.Cost;
             var subtotal = basket.Items.Sum(i => i.Quantity * i.Price);
             var amount = (long)Math.Round((subtotal + deliveryMethod.Cost) + 100m);
 
-            if (!string.IsNullOrEmpty(basket.PaymentIntentId))
+            if (!string.IsNullOrEmpty(basket.PaymentIntentId)&& basket.PaymentIntentId.StartsWith("pi_"))
             {
                 await _paymentGatway.UpadatePaymentIntentAsync(basket.PaymentIntentId, amount, ct);
             }
